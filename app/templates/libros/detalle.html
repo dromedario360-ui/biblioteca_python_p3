@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ libro.titulo }}{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-md-4">
+        {% if libro.imagen %}
+        <img src="{{ url_for('static', filename=libro.imagen) }}" class="img-fluid rounded shadow-sm" alt="{{ libro.titulo }}">
+        {% else %}
+        <div class="book-cover book-cover-placeholder rounded">📖</div>
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        <h2>{{ libro.titulo }}</h2>
+        <h5 class="text-muted">{{ libro.autor }}</h5>
+        {% if libro.categoria %}<span class="badge bg-secondary mb-2">{{ libro.categoria.nombre }}</span>{% endif %}
+        {% if libro.isbn %}<p class="text-muted">ISBN: {{ libro.isbn }}</p>{% endif %}
+        <p>{{ libro.descripcion or "Sin descripción disponible." }}</p>
+        <p>
+            <span class="badge {% if libro.disponible %}bg-success{% else %}bg-danger{% endif %}">
+                {{ libro.copias_disponibles }} / {{ libro.copias_totales }} copias disponibles
+            </span>
+        </p>
+
+        {% if current_user.is_authenticated and libro.disponible %}
+        <form method="POST" action="{{ url_for('prestamos.pedir', libro_id=libro.id) }}" class="d-flex gap-2 mt-3" style="max-width: 300px;">
+            <input type="number" name="cantidad" min="1" max="{{ libro.copias_disponibles }}" value="1" class="form-control">
+            <button type="submit" class="btn btn-primary text-nowrap">Solicitar préstamo</button>
+        </form>
+        {% endif %}
+
+        <a href="{{ url_for('libros.listar') }}" class="btn btn-link mt-3 ps-0">&larr; Volver al catálogo</a>
+    </div>
+</div>
+{% endblock %}

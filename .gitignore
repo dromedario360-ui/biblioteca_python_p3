@@ -8,3 +8,7 @@ htmlcov/
 *.egg-info/
 .env
 instance/
+app/static/uploads/libros/*
+app/static/uploads/perfiles/*
+!app/static/uploads/libros/.gitkeep
+!app/static/uploads/perfiles/.gitkeep

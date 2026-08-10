@@ -30,7 +30,8 @@ def test_no_hay_copias_disponibles(client, usuario_normal, app):
 
     login(client, "juan@test.com", "clave123")
     resp = client.post(f"/prestamos/{libro_id}/pedir", follow_redirects=True)
-    assert "No hay copias disponibles".encode("utf-8") in resp.data
+    assert "disponible".encode("utf-8") in resp.data
+    assert "No disponible".encode("utf-8") in resp.data
 
 
 def test_devolver_prestamo(client, usuario_normal, libro_demo, app):

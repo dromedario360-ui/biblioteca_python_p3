@@ -10,6 +10,11 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Carpeta donde se guardan las imágenes subidas (libros y fotos de perfil)
+    UPLOAD_FOLDER = os.path.join(BASE_DIR, "app", "static", "uploads")
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5 MB por archivo
+    EXTENSIONES_PERMITIDAS = {"png", "jpg", "jpeg", "webp", "gif"}
+
 
 class TestConfig(Config):
     TESTING = True
