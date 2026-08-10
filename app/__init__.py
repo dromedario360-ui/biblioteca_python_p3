@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -13,6 +14,13 @@ def create_app(config_object="config.Config"):
     app = Flask(__name__)
     app.config.from_object(config_object)
 
+    os.makedirs(
+        os.path.join(app.config["UPLOAD_FOLDER"], "libros"), exist_ok=True
+    )
+    os.makedirs(
+        os.path.join(app.config["UPLOAD_FOLDER"], "perfiles"), exist_ok=True
+    )
+
     db.init_app(app)
     login_manager.init_app(app)
 
@@ -25,12 +33,14 @@ def create_app(config_object="config.Config"):
     from app.routes.auth import auth_bp
     from app.routes.libros import libros_bp
     from app.routes.prestamos import prestamos_bp
+    from app.routes.categorias import categorias_bp
     from app.routes.main import main_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(libros_bp, url_prefix="/libros")
     app.register_blueprint(prestamos_bp, url_prefix="/prestamos")
+    app.register_blueprint(categorias_bp, url_prefix="/categorias")
 
     with app.app_context():
         db.create_all()

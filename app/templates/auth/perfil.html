@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Mi perfil{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                {% if current_user.foto %}
+                <img src="{{ url_for('static', filename=current_user.foto) }}" class="rounded-circle mb-3 profile-photo" alt="Foto de perfil">
+                {% else %}
+                <div class="rounded-circle mb-3 profile-photo profile-photo-placeholder mx-auto">
+                    {{ current_user.nombre[0]|upper }}
+                </div>
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3 text-start">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" name="nombre" class="form-control" value="{{ current_user.nombre }}">
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label class="form-label">Foto de perfil</label>
+                        <input type="file" name="foto" class="form-control" accept="image/*">
+                    </div>
+                    <p class="text-muted small">{{ current_user.email }}</p>
+                    <button type="submit" class="btn btn-primary w-100">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h4 class="mb-3">Historial de préstamos</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Libro</th>
+                    <th>Cantidad</th>
+                    <th>Fecha préstamo</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in historial %}
+                <tr>
+                    <td>{{ p.libro.titulo }}</td>
+                    <td>{{ p.cantidad }}</td>
+                    <td>{{ p.fecha_prestamo.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        {% if p.devuelto %}
+                        <span class="badge bg-success">Devuelto</span>
+                        {% elif p.esta_atrasado %}
+                        <span class="badge bg-danger">Atrasado</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">Activo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4">Aún no tienes préstamos registrados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
