@@ -6,7 +6,10 @@
         {% if libro.imagen %}
         <img src="{{ url_for('static', filename=libro.imagen) }}" class="img-fluid rounded shadow-sm" alt="{{ libro.titulo }}">
         {% else %}
-        <div class="book-cover book-cover-placeholder rounded">📖</div>
+        <div class="book-cover book-cover-placeholder rounded">
+            <span>&#10087;</span>
+            <span class="sin-portada-label">Sin portada</span>
+        </div>
         {% endif %}
     </div>
     <div class="col-md-8">
@@ -21,11 +24,14 @@
             </span>
         </p>
 
-        {% if current_user.is_authenticated and libro.disponible %}
+        {% if current_user.is_authenticated and not current_user.es_admin and libro.disponible %}
         <form method="POST" action="{{ url_for('prestamos.pedir', libro_id=libro.id) }}" class="d-flex gap-2 mt-3" style="max-width: 300px;">
             <input type="number" name="cantidad" min="1" max="{{ libro.copias_disponibles }}" value="1" class="form-control">
             <button type="submit" class="btn btn-primary text-nowrap">Solicitar préstamo</button>
         </form>
+        {% endif %}
+        {% if current_user.is_authenticated and current_user.es_admin %}
+        <a href="{{ url_for('libros.editar', libro_id=libro.id) }}" class="btn btn-outline-primary mt-3">Editar libro</a>
         {% endif %}
 
         <a href="{{ url_for('libros.listar') }}" class="btn btn-link mt-3 ps-0">&larr; Volver al catálogo</a>
