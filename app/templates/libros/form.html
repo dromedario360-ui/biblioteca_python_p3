@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Agregar libro{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="mb-4">Agregar nuevo libro</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Título</label>
+                <input type="text" name="titulo" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Autor</label>
+                <input type="text" name="autor" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">ISBN (opcional)</label>
+                <input type="text" name="isbn" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Categoría</label>
+                <select name="categoria_id" class="form-select">
+                    <option value="">-- Sin categoría --</option>
+                    {% for c in categorias %}
+                    <option value="{{ c.id }}">{{ c.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Cantidad de copias</label>
+                <input type="number" name="copias" min="1" value="1" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar libro</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
