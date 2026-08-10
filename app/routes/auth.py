@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
-from app.models import Usuario
+from app.models import Usuario, Prestamo
+from app.utils import guardar_imagen
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -56,3 +57,27 @@ def logout():
     logout_user()
     flash("Sesión cerrada correctamente.", "info")
     return redirect(url_for("main.index"))
+
+
+@auth_bp.route("/perfil", methods=["GET", "POST"])
+@login_required
+def perfil():
+    if request.method == "POST":
+        nombre = request.form.get("nombre", "").strip()
+        if nombre:
+            current_user.nombre = nombre
+
+        nueva_foto = guardar_imagen(request.files.get("foto"), "perfiles")
+        if nueva_foto:
+            current_user.foto = nueva_foto
+
+        db.session.commit()
+        flash("Perfil actualizado correctamente.", "success")
+        return redirect(url_for("auth.perfil"))
+
+    historial = (
+        Prestamo.query.filter_by(usuario_id=current_user.id)
+        .order_by(Prestamo.fecha_prestamo.desc())
+        .all()
+    )
+    return render_template("auth/perfil.html", historial=historial)

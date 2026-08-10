@@ -12,6 +12,7 @@ class Usuario(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     es_admin = db.Column(db.Boolean, default=False)
+    foto = db.Column(db.String(300), nullable=True)
     fecha_registro = db.Column(db.DateTime, default=datetime.utcnow)
 
     prestamos = db.relationship("Prestamo", backref="usuario", lazy=True)
@@ -45,6 +46,8 @@ class Libro(db.Model):
     titulo = db.Column(db.String(200), nullable=False)
     autor = db.Column(db.String(150), nullable=False)
     isbn = db.Column(db.String(20), unique=True, nullable=True)
+    descripcion = db.Column(db.Text, nullable=True)
+    imagen = db.Column(db.String(300), nullable=True)
     categoria_id = db.Column(db.Integer, db.ForeignKey("categorias.id"), nullable=True)
     copias_totales = db.Column(db.Integer, default=1, nullable=False)
     copias_disponibles = db.Column(db.Integer, default=1, nullable=False)
@@ -66,6 +69,7 @@ class Prestamo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
     libro_id = db.Column(db.Integer, db.ForeignKey("libros.id"), nullable=False)
+    cantidad = db.Column(db.Integer, default=1, nullable=False)
     fecha_prestamo = db.Column(db.DateTime, default=datetime.utcnow)
     fecha_limite = db.Column(
         db.DateTime, default=lambda: datetime.utcnow() + timedelta(days=14)

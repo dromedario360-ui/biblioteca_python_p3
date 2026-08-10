@@ -23,11 +23,14 @@ def seed():
         ficcion = Categoria.query.filter_by(nombre="Ficción").first()
 
         libros_demo = [
-            ("Clean Code", "Robert C. Martin", tech.id, 3),
-            ("Cien años de soledad", "Gabriel García Márquez", ficcion.id, 2),
-            ("Introduction to Algorithms", "Thomas Cormen", tech.id, 2),
+            ("Clean Code", "Robert C. Martin", tech.id, 3,
+             "Una guía práctica sobre cómo escribir código legible y mantenible."),
+            ("Cien años de soledad", "Gabriel García Márquez", ficcion.id, 2,
+             "La historia de la familia Buendía en el pueblo de Macondo."),
+            ("Introduction to Algorithms", "Thomas Cormen", tech.id, 2,
+             "Referencia clásica sobre algoritmos y estructuras de datos."),
         ]
-        for titulo, autor, cat_id, copias in libros_demo:
+        for titulo, autor, cat_id, copias, descripcion in libros_demo:
             if not Libro.query.filter_by(titulo=titulo).first():
                 db.session.add(
                     Libro(
@@ -36,6 +39,7 @@ def seed():
                         categoria_id=cat_id,
                         copias_totales=copias,
                         copias_disponibles=copias,
+                        descripcion=descripcion,
                     )
                 )
         db.session.commit()

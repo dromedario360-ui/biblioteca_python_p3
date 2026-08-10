@@ -21,9 +21,18 @@
                     {% endif %}
                     {% endif %}
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-center">
                     {% if current_user.is_authenticated %}
-                    <li class="nav-item"><span class="nav-link">Hola, {{ current_user.nombre }}</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-2" href="{{ url_for('auth.perfil') }}">
+                            {% if current_user.foto %}
+                            <img src="{{ url_for('static', filename=current_user.foto) }}" class="nav-avatar rounded-circle" alt="">
+                            {% else %}
+                            <span class="nav-avatar nav-avatar-placeholder rounded-circle">{{ current_user.nombre[0]|upper }}</span>
+                            {% endif %}
+                            {{ current_user.nombre }}
+                        </a>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Salir</a></li>
                     {% else %}
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Iniciar sesión</a></li>

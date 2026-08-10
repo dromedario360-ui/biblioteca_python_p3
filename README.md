@@ -14,11 +14,14 @@ Desarrollado con metodología **Agile-Scrum** y flujo de ramas **Git Flow**.
 ## Funcionalidades (Release 1)
 
 - Registro e inicio de sesión de usuarios
-- Catálogo de libros con búsqueda por título/autor
-- Gestión de libros (agregar/eliminar) — solo administradores
-- Solicitud y devolución de préstamos
+- Catálogo de libros con búsqueda por título/autor y filtro por categoría
+- Gestión de libros (agregar/editar/eliminar) con imagen y descripción — solo administradores
+- Gestión de categorías (CRUD) — solo administradores
+- Solicitud y devolución de préstamos, incluyendo varias copias de un mismo libro
+- Perfil de usuario con foto editable e historial de préstamos
 - Control de copias disponibles y préstamos atrasados
 - Panel con estadísticas básicas
+- Panel de administración de escritorio (Flet) para gestionar libros y categorías fuera del navegador
 
 ## Instalación local
 
@@ -26,11 +29,24 @@ Desarrollado con metodología **Agile-Scrum** y flujo de ramas **Git Flow**.
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
-flask --app run seed      # carga datos de ejemplo (usuario admin incluido)
+python -m flask --app run seed      # carga datos de ejemplo (usuario admin incluido)
 python run.py
 ```
 
 Usuario administrador de prueba: `admin@biblioteca.com` / `admin123`
+
+### Panel de administración (Flet)
+
+Con el entorno virtual activado y la base de datos ya creada (haber corrido `run.py` al menos una vez):
+
+```powershell
+python admin_app.py
+```
+
+Se abre una ventana de escritorio con pestañas **Libros** y **Categorías**, donde puedes
+crear, editar y eliminar registros, incluyendo la imagen de portada de cada libro.
+Usa la misma base de datos SQLite que la app web, así que los cambios se reflejan
+de inmediato al recargar el catálogo en el navegador.
 
 ## Ejecutar las pruebas automatizadas
 
