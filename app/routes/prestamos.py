@@ -21,10 +21,20 @@ def mis_prestamos():
 @prestamos_bp.route("/<int:libro_id>/pedir", methods=["POST"])
 @login_required
 def pedir(libro_id):
-    libro = Libro.query.get_or_404(libro_id)
+    from flask import request
 
-    if libro.copias_disponibles <= 0:
-        flash("No hay copias disponibles de este libro.", "danger")
+    libro = Libro.query.get_or_404(libro_id)
+    try:
+        cantidad = int(request.form.get("cantidad", 1))
+    except (TypeError, ValueError):
+        cantidad = 1
+    cantidad = max(1, cantidad)
+
+    if libro.copias_disponibles < cantidad:
+        flash(
+            f"Solo hay {libro.copias_disponibles} copia(s) disponible(s) de este libro.",
+            "danger",
+        )
         return redirect(url_for("libros.listar"))
 
     ya_prestado = Prestamo.query.filter_by(
@@ -34,12 +44,12 @@ def pedir(libro_id):
         flash("Ya tienes un préstamo activo de este libro.", "warning")
         return redirect(url_for("libros.listar"))
 
-    prestamo = Prestamo(usuario_id=current_user.id, libro_id=libro.id)
-    libro.copias_disponibles -= 1
+    prestamo = Prestamo(usuario_id=current_user.id, libro_id=libro.id, cantidad=cantidad)
+    libro.copias_disponibles -= cantidad
     db.session.add(prestamo)
     db.session.commit()
 
-    flash(f'Préstamo de "{libro.titulo}" registrado correctamente.', "success")
+    flash(f'Préstamo de {cantidad} copia(s) de "{libro.titulo}" registrado correctamente.', "success")
     return redirect(url_for("prestamos.mis_prestamos"))
 
 
@@ -58,7 +68,7 @@ def devolver(prestamo_id):
 
     prestamo.devuelto = True
     prestamo.fecha_devolucion = datetime.utcnow()
-    prestamo.libro.copias_disponibles += 1
+    prestamo.libro.copias_disponibles += prestamo.cantidad
     db.session.commit()
 
     flash("Libro devuelto correctamente.", "success")
