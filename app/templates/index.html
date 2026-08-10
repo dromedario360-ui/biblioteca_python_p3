@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Inicio - Biblioteca Online{% endblock %}
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    <h1 class="display-6">Bienvenido a la Biblioteca Online</h1>
+    <p class="lead">Sistema de gestión de préstamos de libros - Proyecto Final Programación III</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Libros en catálogo</h5>
+                <p class="display-5">{{ total_libros }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Copias disponibles</h5>
+                <p class="display-5">{{ total_disponibles }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Préstamos activos</h5>
+                <p class="display-5">{{ prestamos_activos }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
